@@ -37,6 +37,23 @@ async function run() {
       res.send(result);
     })
 
+    // To update / add users
+    app.patch("/users", async(req, res) => {
+      const user = req.body;
+      const filter = {email : user.email}
+      const updateDoc = {
+        $set:{
+          name: user.name,
+          email: user.email,
+          photo: user.photo
+        }
+      }
+      const options = {upsert: true};
+
+      const result = await userCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+    })
+
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
