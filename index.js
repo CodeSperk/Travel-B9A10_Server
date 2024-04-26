@@ -8,12 +8,11 @@ const port = process.env.PORT || 5000;
 
 // middleware
 app.use(cors({
-  origin: ["http://localhost:5173/", "https://adventura-api-data.vercel.app/"],
+  origin: ["http://localhost:5173", "https://adventura-client.web.app"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
 }));
 app.use(express.json());
-
 
 const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASS}@tour-travel.jqjzqi7.mongodb.net/?retryWrites=true&w=majority&appName=Tour-Travel`;
 
@@ -30,13 +29,14 @@ async function run() {
   try {
 
     const database = client.db("sample_mflix");
-    const users = database.collection("users");
+    const userCollection = database.collection("users");
 
     //trial data
     app.get("/users", async(req, res) => {
-      const result = await users.find().toArray();
+      const cursor = userCollection.find();
+      const result = await cursor.toArray();
       res.send(result);
-    })
+    });
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
