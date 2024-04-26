@@ -5,7 +5,6 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
-
 // middleware
 app.use(cors({
   origin: ["http://localhost:5173", "https://adventura-client.web.app"],
@@ -28,15 +27,16 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
 
-    const database = client.db("sample_mflix");
-    const userCollection = database.collection("users");
+    const userCollection = client.db("UserDB").collection("users");
 
-    //trial data
-    app.get("/users", async(req, res) => {
-      const cursor = userCollection.find();
-      const result = await cursor.toArray();
+
+    //To post user to the database
+    app.post("/users", async(req, res) => {
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
       res.send(result);
-    });
+    })
+
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
