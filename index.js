@@ -28,7 +28,7 @@ async function run() {
   try {
 
     const userCollection = client.db("UserDB").collection("users");
-
+    const touristSpotCollection = client.db("TourDB").collection("tourisSpot");
 
     //To post user to the database
     app.post("/users", async(req, res) => {
@@ -52,6 +52,14 @@ async function run() {
 
       const result = await userCollection.updateOne(filter, updateDoc, options);
       res.send(result);
+    })
+
+
+    //To Manage Travel data
+    app.post("/touristSpots", async(req, res) => {
+      const newSpot = req.body;
+      const result = await touristSpotCollection.insertOne(newSpot);
+      res.send(result)
     })
 
 
