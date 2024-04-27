@@ -61,6 +61,10 @@ async function run() {
       const result = await touristSpotCollection.insertOne(newSpot);
       res.send(result)
     })
+    app.get("/", async(req,res) => {
+      const result = await touristSpotCollection.find().toArray();
+      res.send(result);
+    })
 
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
