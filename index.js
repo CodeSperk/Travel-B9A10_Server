@@ -68,6 +68,42 @@ async function run() {
       const result = await touristSpotCollection.findOne(query);
       res.send(result);
     })
+    // to load userwise data
+    app.get("/:userEmail", async(req, res) => {
+      const userEmail = req.params.userEmail;
+      const query = {userEmail: userEmail};
+
+      const result = await touristSpotCollection.find(query).toArray();
+      res.send(result);
+    })
+    // update spot data
+    app.put("/:id", async(req, res) => {
+      const id = req.params.id;
+      const updatedSpot = req.body;
+      const query = {_id: new ObjectId(id)};
+      const updatedDoc = {
+        $set:{
+          photoBanner: updatedSpot.photoBanner,
+          placeName:updatedSpot.placeName,
+          country: updatedSpot.country,
+          location: updatedSpot.location,
+          description: updatedSpot.description,
+          cost: updatedSpot.cost,
+          season: updatedSpot.season,
+          travelTime: updatedSpot.travelTime,
+          totalVisitor: updatedSpot.totalVisitor
+        }
+      };
+      const result = await touristSpotCollection.updateOne(query, updatedDoc);
+      res.send(result);
+    })
+
+    // to delete spot
+    app.delete("/:id", async(req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)};
+      const result = await touristSpotCollection.deleteOne(query);
+    })
 
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
