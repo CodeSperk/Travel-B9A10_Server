@@ -29,6 +29,16 @@ async function run() {
     const userCollection = client.db("UserDB").collection("users");
     const touristSpotCollection = client.db("TourDB").collection("tourisSpot");
 
+    const countriesCollection = client.db("CountryDB").collection("allCountry");
+  
+    
+  
+    //to get country data
+    app.get("/countries", async(req, res) => {
+      const result = await countriesCollection.find().toArray();
+      res.send(result);
+    });
+
     //To post user to the database
     app.post("/users", async(req, res) => {
       const user = req.body;
@@ -58,10 +68,11 @@ async function run() {
       const result = await touristSpotCollection.insertOne(newSpot);
       res.send(result)
     })
-    app.get("/", async(req,res) => {
+    app.get("/touristSpots", async(req,res) => {
       const result = await touristSpotCollection.find().toArray();
       res.send(result);
     })
+
     app.get("/details/:id", async(req, res) => {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)};
