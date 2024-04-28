@@ -28,16 +28,15 @@ async function run() {
   try {
     const userCollection = client.db("UserDB").collection("users");
     const touristSpotCollection = client.db("TourDB").collection("tourisSpot");
-
-    const countriesCollection = client.db("CountryDB").collection("allCountry");
-  
+    const allCountry = client.db("TourDB").collection("countries"); 
     
   
     //to get country data
     app.get("/countries", async(req, res) => {
-      const result = await countriesCollection.find().toArray();
+      const result = await allCountry.find().toArray();
       res.send(result);
     });
+
 
     //To post user to the database
     app.post("/users", async(req, res) => {
@@ -79,6 +78,15 @@ async function run() {
       const result = await touristSpotCollection.findOne(query);
       res.send(result);
     })
+
+    app.get("/allSpots/:country", async (req, res) => {
+      const country = req.params.country;
+      const query = {country: country};
+      const result = await touristSpotCollection.find(query).toArray();
+      res.send(result);
+    })
+
+
     // to load userwise data
     app.get("/:userEmail", async(req, res) => {
       const userEmail = req.params.userEmail;
