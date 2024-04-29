@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 app.use(cors({
   origin: ["http://localhost:5173", "https://adventura-client.web.app"],
   credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"]
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 }));
 app.use(express.json());
 
@@ -38,29 +38,6 @@ async function run() {
     });
 
 
-    //To post user to the database
-    app.post("/users", async(req, res) => {
-      const user = req.body;
-      const result = await userCollection.insertOne(user);
-      res.send(result);
-    })
-
-    // To update / add users
-    app.patch("/users", async(req, res) => {
-      const user = req.body;
-      const filter = {email : user.email}
-      const updateDoc = {
-        $set:{
-          name: user.name,
-          email: user.email,
-          photo: user.photo
-        }
-      }
-      const options = {upsert: true};
-      const result = await userCollection.updateOne(filter, updateDoc, options);
-      res.send(result);
-    })
-
     //To Manage Travel data
     app.post("/touristSpots", async(req, res) => {
       const newSpot = req.body;
@@ -85,7 +62,6 @@ async function run() {
       const result = await touristSpotCollection.find(query).toArray();
       res.send(result);
     })
-
 
     // to load userwise data
     app.get("/:userEmail", async(req, res) => {
@@ -122,6 +98,7 @@ async function run() {
       const id = req.params.id;
       const query = {_id: new ObjectId(id)};
       const result = await touristSpotCollection.deleteOne(query);
+      res.send(result);
     })
 
 
